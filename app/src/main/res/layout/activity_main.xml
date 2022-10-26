@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/layout_banner_container"
+        app:layout_constraintBottom_toTopOf="@id/layout_interact_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_label">
@@ -60,6 +60,13 @@
             android:layout_marginTop="16dp"
             android:text="Show reward ad" />
 
+        <Button
+            android:id="@+id/btn_load_and_show_interact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Load and show interact ad" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_info"
             android:layout_width="match_parent"
@@ -71,6 +78,13 @@
             android:textSize="16dp" />
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/layout_interact_container"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toTopOf="@id/layout_banner_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <FrameLayout
         android:id="@+id/layout_banner_container"

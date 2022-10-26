@@ -10,6 +10,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
+        maven {
+            allowInsecureProtocol = true
+            url 'http://172.30.10.160:8081/nexus/repository/releases'
+        }
     }
 }
 rootProject.name = "MaticooSDKDemo"

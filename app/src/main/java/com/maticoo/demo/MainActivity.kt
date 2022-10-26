@@ -3,6 +3,7 @@ package com.maticoo.demo
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -10,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.maticoo.sdk.InitConfiguration
 import com.maticoo.sdk.ad.banner.BannerAd
 import com.maticoo.sdk.ad.banner.BannerAdListener
+import com.maticoo.sdk.ad.interact.InteractAd
+import com.maticoo.sdk.ad.interact.InteractAdListener
 import com.maticoo.sdk.ad.utils.error.Error
 import com.maticoo.sdk.ad.video.RewardedVideoAd
 import com.maticoo.sdk.ad.video.RewardedVideoListener
@@ -27,12 +30,15 @@ class MainActivity : AppCompatActivity() {
     private val btnLoadAndShowBanner: Button by lazy { findViewById(R.id.btn_load_and_show_banner) }
     private val btnLoadReward: Button by lazy { findViewById(R.id.btn_load_reward) }
     private val btnShowReward: Button by lazy { findViewById(R.id.btn_show_reward) }
+    private val btnLoadAndShowInteract: Button by lazy { findViewById(R.id.btn_load_and_show_interact) }
 
     private val tvAdInfo: TextView by lazy { findViewById(R.id.tv_info) }
 
     private val layoutBannerContainer: FrameLayout by lazy { findViewById(R.id.layout_banner_container) }
+    private val layoutInteractContainer: FrameLayout by lazy { findViewById(R.id.layout_interact_container) }
 
     private var bannerAd: BannerAd? = null
+    private var interactAd: InteractAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +56,10 @@ class MainActivity : AppCompatActivity() {
 
         btnShowReward.setOnClickListener {
             showReward()
+        }
+
+        btnLoadAndShowInteract.setOnClickListener {
+            loadAndShowInteract()
         }
     }
 
@@ -165,6 +175,54 @@ class MainActivity : AppCompatActivity() {
         RewardedVideoAd.showAd(Constant.REWARD_ID)
     }
 
+    private fun loadAndShowInteract() {
+        interactAd = InteractAd(this, Constant.INTERACT_ID)
+        interactAd?.setAdListener(object : InteractAdListener {
+            override fun onInteractAdReady(placementId: String, view: View) {
+                // Invoked when InteractAd Ad are available.
+                showAdInfo("interactAd, onInteractAdReady: placementId = $placementId")
+
+                try {
+                    if (null != view.parent) {
+                        (view.parent as ViewGroup).removeView(view)
+                    }
+                    layoutInteractContainer.removeAllViews()
+                    val layoutParams = FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT
+                    )
+                    layoutInteractContainer.addView(view, layoutParams)
+                } catch (e: Exception) {
+                    showAdInfo("interactAd, onInteractAdReady, Exception = $e")
+                }
+            }
+
+            override fun onInteractAdFailed(placementId: String, error: Error) {
+                showAdInfo("interactAd, onInteractAdFailed: placementId = $placementId, error = ${error}")
+            }
+            override fun onInteractAdEntranceShowed(placementId: String) {
+                showAdInfo("interactAd, onInteractAdEntranceShowed: placementId = $placementId")
+            }
+            override fun onInteractAdEntranceShowFailed(placementId: String, error: Error) {
+                showAdInfo("interactAd, onInteractAdEntranceShowFailed: placementId = $placementId, error = ${error}")
+            }
+            override fun onInteractAdEntranceClick(placementId: String) {
+                showAdInfo("interactAd, onInteractAdEntranceClick: placementId = $placementId")
+            }
+            override fun onInteractAdFullScreenOpened(placementId: String) {
+                showAdInfo("interactAd, onInteractAdFullScreenOpened: placementId = $placementId")
+            }
+            override fun onInteractAdFullScreenOpenFailed(placementId: String, error: Error) {
+                showAdInfo("interactAd, onInteractAdFullScreenOpenFailed: placementId = $placementId")
+            }
+            override fun onInteractAdFullScreenClose(placementId: String) {
+                showAdInfo("interactAd, onInteractAdFullScreenClose: placementId = $placementId")
+            }
+        })
+
+        interactAd?.loadAd()
+    }
+
     private fun showAdInfo(info: String) {
         tvAdInfo.text = info
         Log.d(TAG, "showAdInfo: info = $info")
@@ -173,6 +231,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         bannerAd?.destroy()
+        interactAd?.destroy()
     }
 }
 

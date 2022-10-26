@@ -7,4 +7,5 @@ public class Constant {
 
     public static final String BANNER_ID = "1003174690";
     public static final String REWARD_ID = "1003176365";
+    public static final String INTERACT_ID = "1003178862";
 }
